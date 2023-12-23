@@ -7,8 +7,8 @@ def load_data():
     # load dataset
     df = pd.read_csv('Iris.csv')
 
-    x = df[["gender","ssc_p","ssc_b","hsc_p","hsc_b","hsc_s","degree_p","degree_t","workex","etest_p","specialisation","mba_p"]]
-    y = df[['status']]
+    x = df[['SepalLengthCm', 'SepalWidthCm', 'PetalLengthCm', 'PetalWidthCm']]
+    y = df[['Species']]
 
     return df, x, y
 
@@ -79,7 +79,7 @@ def app_prediction(df, x, y):
         specialisation = st.number_input('Input nilai specialisation')
         mba_p = st.number_input('Input nilai mba_p')
 
-    features = [gender, ssc_p, ssc_b, hsc_p, hsc_b, hsc_s, degree_p, degree_t, workex, etest_p, specialisation, mba_p]
+    features = ['SepalLengthCm', 'SepalWidthCm', 'PetalLengthCm', 'PetalWidthCm']
 
     # Tombol prediksi
     if st.button("Prediksi"):
@@ -107,4 +107,4 @@ def app_visualisation(df, x, y):
         st.graphviz_chart(dot_data)
 
 # Menjalankan aplikasi
-app()
+app();
