@@ -4,8 +4,6 @@ import numpy as np
 from sklearn.model_selection import train_test_split
 from sklearn.tree import DecisionTreeClassifier
 from sklearn.metrics import accuracy_score
-import plotly.express as px
-
 # Upload the dataset
 st.title("D-Tree Web Application")
 uploaded_file = st.file_uploader("Choose a file")
