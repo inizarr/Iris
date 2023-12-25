@@ -7,6 +7,15 @@ from sklearn.metrics import accuracy_score
 from joblib import load
 import plotly.express as px
 
+# Example data
+data = {'x': [1, 2, 3], 'y': [1, 3, 2], 'z': [2, 3, 1]}
+
+# Create a 3D scatter plot
+fig = px.scatter_3d(data, x='x', y='y', z='z')
+
+# Show the plot
+fig.show()
+
 def build_model(features_train, target_train):
     clf = DecisionTreeClassifier()
     clf.fit(features_train, target_train)
