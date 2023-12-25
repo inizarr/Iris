@@ -1,56 +1,65 @@
-# import modul yang akan digunakan
-import numpy as np
-import pandas as pd
-from sklearn.tree import DecisionTreeClassifier
 import streamlit as st
+import pandas as pd
+import numpy as np
+from sklearn.model_selection import train_test_split
+from sklearn.tree import DecisionTreeClassifier
+from sklearn.metrics import accuracy_score
+import plotly.express as px
 
+# Upload the dataset
+st.title("D-Tree Web Application")
+uploaded_file = st.file_uploader("Choose a file")
 
-# membuat sidebar
-st.sidebar.title("Navigasi")
+# Check if a file is uploaded
+if uploaded_file is not None:
+    # Load the dataset
+    df = pd.read_csv(Iris.csv)
 
-# membuat radio option
-page = st.sidebar.radio("Pages", list(Tabs.keys()))
+    # Check if the dataset has at least 2 columns
+    if len(df.columns) >= 2:
+        # Show the first 10 rows of the dataset
+        st.write("First 10 rows of the dataset:")
+        st.dataframe(df.head(10))
 
-# load dataset
-df, x, y = ()
+        # Choose the target column
+        target_col = st.selectbox("Select the target column", df.columns)
 
-# kondisi call app function
-if page in ["Prediction", "Visualisation"]:
-    Tabs[page].app(df,x,y)
-else:
-    Tabs[page].app()
+        # Split the dataset into features and target
+        features = df.drop(columns=[target_col])
+        target = df[target_col]
 
-
-st.cache_data ()
-def load_data():
-
-    #load dataset
-    df = pd.read_csv('Iris.csv')
-
-    x = df[["Id", "SepalLengthCm", "SepalWidthCm", "PetalLengthCm", "PetalWidthCm", "Species"]]
-    y = df[['condition']]
-
-    return df, x, y
-
-st.cache_data ()
-def train_model(x,y):
-    model = DecisionTreeClassifier(
-            ccp_alpha=0.0, class_weight=None, criterion='entropy',
-            max_depth=4, max_features=None, max_leaf_nodes=None,
-            min_impurity_decrease=0.0, min_samples_leaf=1,
-            min_samples_split=2, min_weight_fraction_leaf=0.0,
-            random_state=80, splitter='best'
+        # Split the dataset into training and testing sets
+        features_train, features_test, target_train, target_test = train_test_split(
+            features, target, test_size=0.2, random_state=42
         )
-    
-    model.fit(x,y)
 
-    score = model.score(x,y)
+        # Create the Decision Tree classifier
+        clf = DecisionTreeClassifier()
 
-    return model, score
+        # Train the classifier
+        clf.fit(features_train, target_train)
 
-def predict(x,y, features):
-    model, score = train_model(x,y)
+        # Make predictions
+        target_pred = clf.predict(features_test)
 
-    prediction = model.predict(np.array(features).reshape(1,-1))
+        # Calculate the accuracy of the model
+        accuracy = accuracy_score(target_test, target_pred)
 
-    return prediction, score
+        # Show the accuracy of the model
+        st.write(f"Accuracy of the model: {accuracy:.2f}")
+
+        # Create the plotly express tree plot
+        tree_plot = px.tree(
+            clf.fit(features_train, target_train),
+            path=['True', 'False', 'color = LightSeaGreen'],
+            values=features_train.iloc[:5, 1].values,
+            hover_data=df.iloc[:5, 2:],
+            title='Decision Tree Plot'
+        )
+
+        # Display the plotly express tree plot
+        st.plotly_chart(tree_plot)
+    else:
+        st.write("Please upload a dataset with at least 2 columns.")
+else:
+    st.write("Please upload a dataset.")
