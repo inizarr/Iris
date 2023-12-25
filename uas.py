@@ -4,11 +4,6 @@ import pandas as pd
 from sklearn.tree import DecisionTreeClassifier
 import streamlit as st
 
-Tabs = {
-    "Home" : home,
-    "Prediction" : predict,
-    "Visualisation" : visualise    
-}
 
 # membuat sidebar
 st.sidebar.title("Navigasi")
