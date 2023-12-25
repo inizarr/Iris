@@ -1,110 +1,65 @@
-import numpy as np
-import pandas as pd
 import streamlit as st
+import pandas as pd
+import numpy as np
+from sklearn.model_selection import train_test_split
 from sklearn.tree import DecisionTreeClassifier
+from sklearn.metrics import accuracy_score
+import plotly.express as px
 
-def load_data():
-    # load dataset
-    df = pd.read_csv('Iris.csv')
+# Upload the dataset
+st.title("D-Tree Web Application")
+uploaded_file = st.file_uploader("Iris.csv", type=["csv"])
 
-    x = df[['SepalLengthCm', 'SepalWidthCm', 'PetalLengthCm', 'PetalWidthCm']]
-    y = df[['Species']]
+# Check if a file is uploaded
+if uploaded_file is not None:
+    # Load the dataset
+    df = pd.read_csv("Iris.csv")
 
-    return df, x, y
+    # Check if the dataset has at least 2 columns
+    if len(df.columns) >= 2:
+        # Show the first 10 rows of the dataset
+        st.write("First 10 rows of the dataset:")
+        st.dataframe(df.head(10))
 
-def train_model(x,y):
-    model = DecisionTreeClassifier(
-            ccp_alpha=0.0, class_weight=None, criterion='entropy',
-            max_depth=4, max_features=None, max_leaf_nodes=None,
-            min_impurity_decrease=0.0, min_samples_leaf=1,
-            min_samples_split=2, min_weight_fraction_leaf=0.0,
-            random_state=80, splitter='best'
+        # Choose the target column
+        target_col = st.selectbox("Select the target column", df.columns)
+
+        # Split the dataset into features and target
+        features = df.drop(columns=[target_col])
+        target = df[target_col]
+
+        # Split the dataset into training and testing sets
+        features_train, features_test, target_train, target_test = train_test_split(
+            features, target, test_size=0.2, random_state=42
         )
-    
-    model.fit(x,y)
 
-    score = model.score(x,y)
+        # Create the Decision Tree classifier
+        clf = DecisionTreeClassifier()
 
-    return model, score
+        # Train the classifier
+        clf.fit(features_train, target_train)
 
-def predict(x,y, features):
-    model, score = train_model(x,y)
+        # Make predictions
+        target_pred = clf.predict(features_test)
 
-    prediction = model.predict(np.array(features).reshape(1,-1))
+        # Calculate the accuracy of the model
+        accuracy = accuracy_score(target_test, target_pred)
 
-    return prediction, score
+        # Show the accuracy of the model
+        st.write(f"Accuracy of the model: {accuracy:.2f}")
 
-def app():
-    # Judul halaman aplikasi
-    st.title("Aplikasi Pendataan Siswa Diterima Kerja")
+        # Create the plotly express tree plot
+        tree_plot = px.tree(
+            clf.fit(features_train, target_train),
+            path=['True', 'False', 'color = LightSeaGreen'],
+            values=features_train.iloc[:5, 1].values,
+            hover_data=df.iloc[:5, 2:],
+            title='Decision Tree Plot'
+        )
 
-    # Membuat sidebar
-    st.sidebar.title("Navigasi")
-
-    # Membuat radio option
-    page = st.sidebar.radio("Pages", ["Home", "Prediction", "Visualisation"])
-
-    # Load dataset
-    df, x, y = load_data()
-
-    # Kondisi call app function
-    if page == "Prediction":
-        app_prediction(df, x, y)
-    elif page == "Visualisation":
-        app_visualisation(df, x, y)
+        # Display the plotly express tree plot
+        st.plotly_chart(tree_plot)
     else:
-        app_home()
-
-def app_home():
-    st.write("Ini adalah halaman utama")
-
-def app_prediction(df, x, y):
-    st.write("Ini adalah halaman prediksi")
-
-    col1, col2 = st.columns(2)
-
-    with col1:
-        gender = st.number_input('Input nilai gender')
-        ssc_p = st.number_input('Input nilai ssc_p')
-        ssc_b = st.number_input('Input nilai ssc_b')
-        hsc_p = st.number_input('Input nilai hsc_p')
-        hsc_b = st.number_input('Input nilai hsc_b')
-        hsc_s = st.number_input('Input nilai hsc_s')
-
-    with col2:
-        degree_p = st.number_input('Input nilai degree_p')
-        degree_t = st.number_input('Input nilai degree_t')
-        workex = st.number_input('Input nilai workex')
-        etest_p = st.number_input('Input nilai etest_p')
-        specialisation = st.number_input('Input nilai specialisation')
-        mba_p = st.number_input('Input nilai mba_p')
-
-    features = ['SepalLengthCm', 'SepalWidthCm', 'PetalLengthCm', 'PetalWidthCm']
-
-    # Tombol prediksi
-    if st.button("Prediksi"):
-        prediction, score = predict(x, y, features)
-        score = score
-        st.info("Prediksi Sukses...")
-
-        if prediction == 1:
-            st.warning("Siswa tidak ditempatkan")
-        else:
-            st.success("Siswa ditempatkan")
-
-        st.write("Model yang digunakan memiliki tingkat akurasi", (score*100), "%")
-
-def app_visualisation(df, x, y):
-    st.write("Ini adalah halaman visualisasi")
-
-    if st.checkbox("Plot Decision Tree"):
-        model, score = train_model(x, y)
-        dot_data = model.export_graphviz(
-            decision_tree=model, max_depth=3, out_file=None, filled=True, rounded=True,
-            feature_names=x.columns, class_names=['Siswa ditempatkan', 'Siswa yang tidak ditempatkan']
-        )
-
-        st.graphviz_chart(dot_data)
-
-# Menjalankan aplikasi
-app();
+        st.write("Please upload a dataset with at least 2 columns.")
+else:
+    st.write("Iris.csv.")
