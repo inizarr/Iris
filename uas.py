@@ -1,5 +1,6 @@
 import streamlit as st
 import pandas as pd
+import numpy as np
 from sklearn.model_selection import train_test_split
 from sklearn.tree import DecisionTreeClassifier
 from sklearn.metrics import accuracy_score
@@ -8,40 +9,40 @@ from sklearn.metrics import accuracy_score
 st.title("Aplikasi Web Pohon Keputusan")
 uploaded_file = st.file_uploader("Pilih file")
 
-# Check if a file is uploaded
+# Periksa apakah file diunggah
 if uploaded_file is not None:
-    # Load the dataset
+    # Muat dataset
     df = pd.read_csv(uploaded_file)
 
-    # Check if the dataset has at least 2 columns
+    # Periksa apakah dataset memiliki setidaknya 2 kolom
     if len(df.columns) >= 2:
-        # Show the first 10 rows of the dataset
-        st.write("10 baris pertama dataset:")
+        # Tampilkan 10 baris pertama dari dataset
+        st.write("10 baris pertama dari dataset:")
         st.dataframe(df.head(10))
 
-        # Choose the target column
+        # Pilih kolom target
         target_col = st.selectbox("Pilih kolom target", df.columns)
 
-        # Split the dataset into features and target
+        # Pisahkan dataset menjadi fitur dan target
         features = df.drop(columns=[target_col])
         target_train = df[target_col]
 
-        # Split the dataset into training and testing sets
+        # Pisahkan dataset menjadi set pelatihan dan pengujian
         features_train, features_test, target_train, target_test = train_test_split(
             features, target_train, test_size=0.2, random_state=42
         )
 
-        # Create the Decision Tree classifier
+        # Buat klasifikasi Pohon Keputusan
         clf = DecisionTreeClassifier()
 
-        # Train the classifier
+        # Latih klasifikasi
         clf.fit(features_train, target_train)
 
-        # Make predictions
+        # Lakukan prediksi
         target_pred = clf.predict(features_test)
 
-        # Calculate the accuracy of the model
+        # Hitung akurasi model
         accuracy = accuracy_score(target_test, target_pred)
 
-        # Show the accuracy of the model
+        # Tampilkan akurasi model
         st.write(f"Akurasi model: {accuracy:.2f}")
