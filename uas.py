@@ -25,7 +25,7 @@ if uploaded_file is not None:
 
         # Split the dataset into features and target
         features = df.drop(columns=[target_col])
-        target = df[target_col]
+       target_train = df[target_col]
 
         # Split the dataset into training and testing sets
         features_train, features_test, target_train, target_test = train_test_split(
