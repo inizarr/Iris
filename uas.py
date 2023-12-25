@@ -35,8 +35,7 @@ if uploaded_file is not None:
         # Buat klasifikasi Pohon Keputusan
         clf = DecisionTreeClassifier()
 
-        # Latih klasifikasi
-        clf.fit(features_train, target_train)
+      
 
         # Lakukan prediksi
         target_pred = clf.predict(features_test)
