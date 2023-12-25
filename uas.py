@@ -20,7 +20,7 @@ st.sidebar.title("Navigasi")
 page = st.sidebar.radio("Pages", list(Tabs.keys()))
 
 # load dataset
-df, x, y = load_data()
+df, x, y = ()
 
 # kondisi call app function
 if page in ["Prediction", "Visualisation"]:
