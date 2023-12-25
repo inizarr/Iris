@@ -3,7 +3,6 @@ import numpy as np
 import pandas as pd
 from sklearn.tree import DecisionTreeClassifier
 import streamlit as st
-from web_functions import load_data
 
 from Tabs import home, predict, visualise
 # import library yang dibutuhkan
