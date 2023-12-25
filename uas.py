@@ -8,7 +8,7 @@ import plotly.express as px
 
 # Upload the dataset
 st.title("D-Tree Web Application")
-uploaded_file = st.file_uploader("Iris.csv", type=["csv"])
+uploaded_file = st.file_uploader("Iris.csv")
 
 # Check if a file is uploaded
 if uploaded_file is not None:
@@ -62,4 +62,4 @@ if uploaded_file is not None:
     else:
         st.write("Please upload a dataset with at least 2 columns.")
 else:
-    st.write("Iris.csv.")
+    st.write("Iris.csv")
