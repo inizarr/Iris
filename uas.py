@@ -11,7 +11,7 @@ uploaded_file = st.file_uploader("Choose a file")
 # Check if a file is uploaded
 if uploaded_file is not None:
     # Load the dataset
-    df = pd.read_csv("iris.csv")
+    df = pd.read_csv("Iris.csv")
 
     # Check if the dataset has at least 2 columns
     if len(df.columns) >= 2:
