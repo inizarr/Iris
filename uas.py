@@ -4,9 +4,6 @@ import pandas as pd
 from sklearn.tree import DecisionTreeClassifier
 import streamlit as st
 
-from Tabs import home, predict, visualise
-# import library yang dibutuhkan
-
 Tabs = {
     "Home" : home,
     "Prediction" : predict,
