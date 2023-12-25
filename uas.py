@@ -35,13 +35,8 @@ if uploaded_file is not None:
         # Buat klasifikasi Pohon Keputusan
         clf = DecisionTreeClassifier()
 
-      
-
-        # Lakukan prediksi
-        target_pred = clf.predict(features_test)
-
         # Hitung akurasi model
-        accuracy = accuracy_score(target_test, target_pred)
+        accuracy = accuracy_score(target_test)
 
         # Tampilkan akurasi model
         st.write(f"Akurasi model: {accuracy:.2f}")
