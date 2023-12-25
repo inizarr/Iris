@@ -4,6 +4,8 @@ import numpy as np
 from sklearn.model_selection import train_test_split
 from sklearn.tree import DecisionTreeClassifier
 from sklearn.metrics import accuracy_score
+import plotly.express as px
+
 # Upload the dataset
 st.title("D-Tree Web Application")
 uploaded_file = st.file_uploader("Choose a file")
@@ -11,7 +13,7 @@ uploaded_file = st.file_uploader("Choose a file")
 # Check if a file is uploaded
 if uploaded_file is not None:
     # Load the dataset
-    df = pd.read_csv("Iris.csv")
+    df = pd.read_csv(uploaded_file)
 
     # Check if the dataset has at least 2 columns
     if len(df.columns) >= 2:
@@ -48,7 +50,7 @@ if uploaded_file is not None:
 
         # Create the plotly express tree plot
         tree_plot = px.tree(
-            clf.fit(features_train, target_train),
+            clf,
             path=['True', 'False', 'color = LightSeaGreen'],
             values=features_train.iloc[:5, 1].values,
             hover_data=df.iloc[:5, 2:],
