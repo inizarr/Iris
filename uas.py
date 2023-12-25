@@ -1,37 +1,39 @@
-import streamlit as st
-import pandas as pd
+# import modul yang akan digunakan
 import numpy as np
-from sklearn.model_selection import train_test_split
+import pandas as pd
 from sklearn.tree import DecisionTreeClassifier
-from sklearn.metrics import accuracy_score
+import streamlit as st
 
-# Upload the dataset
-st.title("Aplikasi Web Pohon Keputusan")
-uploaded_file = st.file_uploader("Pilih file")
+st.cache_data ()
+def load_data():
 
-# Periksa apakah file diunggah
-if uploaded_file is not None:
-    # Muat dataset
-    df = pd.read_csv(uploaded_file)
+    #load dataset
+    df = pd.read_csv('Iris.csv')
 
-    # Periksa apakah dataset memiliki setidaknya 2 kolom
-    if len(df.columns) >= 2:
-        # Tampilkan 10 baris pertama dari dataset
-        st.write("10 baris pertama dari dataset:")
-        st.dataframe(df.head(10))
+    x = df[["Id", "SepalLengthCm", "SepalWidthCm", "PetalLengthCm", "PetalWidthCm", "Species"]]
+    y = df[['condition']]
 
-        # Pilih kolom target
-        target_col = st.selectbox("Pilih kolom target", df.columns)
+    return df, x, y
 
-        # Pisahkan dataset menjadi fitur dan target
-        features = df.drop(columns=[target_col])
-        target_train = df[target_col]
-
-        # Pisahkan dataset menjadi set pelatihan dan pengujian
-        features_train, features_test, target_train, target_test = train_test_split(
-            features, target_train, test_size=0.2, random_state=42
+st.cache_data ()
+def train_model(x,y):
+    model = DecisionTreeClassifier(
+            ccp_alpha=0.0, class_weight=None, criterion='entropy',
+            max_depth=4, max_features=None, max_leaf_nodes=None,
+            min_impurity_decrease=0.0, min_samples_leaf=1,
+            min_samples_split=2, min_weight_fraction_leaf=0.0,
+            random_state=80, splitter='best'
         )
+    
+    model.fit(x,y)
 
-        # Buat klasifikasi Pohon Keputusan
-        clf = DecisionTreeClassifier()
+    score = model.score(x,y)
 
+    return model, score
+
+def predict(x,y, features):
+    model, score = train_model(x,y)
+
+    prediction = model.predict(np.array(features).reshape(1,-1))
+
+    return prediction, score
