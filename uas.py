@@ -1,34 +1,15 @@
 import streamlit as st
-import pandas as pd
-from sklearn.model_selection import train_test_split
-from sklearn.tree import DecisionTreeClassifier
-from sklearn.metrics import accuracy_score
+from graphviz import Digraph
 
-# Mengunduh dataset
-st.title('Titanic Decision Tree')
-data = pd.read_csv('Iris.csv')
+def decision_tree_visualization():
+    st.write('Menggunakan Graphviz untuk visualisasi pohon keputusan.')
 
-# Memilih kolom yang ingin di tampilkan
-columns = data.columns.tolist()
-columns.remove('survived')
-feature_selection = st.multiselect('Pilih Fitur', columns)
+    # Buat pohon keputusan di sini.
+    tree = Digraph('tree', node_attr={'shape': 'box'})
+    tree.edge('Parent', 'Child')
+    # Tambahkan pohon keputusan lainnya di sini...
 
-# Memasukkan fitur dan target ke dalam variabel baru
-X = data[feature_selection]
-y = data['survived']
+    # Render pohon keputusan menggunakan Graphviz
+    st.graphviz_chart(tree)
 
-# Membagi data menjadi train dan test
-X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
-
-# Membangun model Decision Tree
-clf = DecisionTreeClassifier()
-clf.fit(X_train, y_train)
-
-# Menghitung akurasi model
-y_pred = clf.predict(X_test)
-accuracy = accuracy_score(y_test, y_pred)
-
-st.write('Akurasi Model: ', accuracy)
-
-# Menampilkan tree model
-st.pyplot(clf.plot_tree(clf))
+decision_tree_visualization()
