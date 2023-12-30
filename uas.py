@@ -6,7 +6,7 @@ from sklearn.metrics import accuracy_score
 
 # Mengunduh dataset
 st.title('Titanic Decision Tree')
-data = pd.read_csv('iris.csv')
+data = pd.read_csv('Iris.csv')
 
 # Memilih kolom yang ingin di tampilkan
 columns = data.columns.tolist()
