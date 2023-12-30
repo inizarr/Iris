@@ -1,29 +1,34 @@
 import streamlit as st
-from sklearn import datasets
-from sklearn.tree import DecisionTreeClassifier
+import pandas as pd
 from sklearn.model_selection import train_test_split
+from sklearn.tree import DecisionTreeClassifier
 from sklearn.metrics import accuracy_score
 
-# Memuat dataset iris
-iris = datasets.load_iris()
-X = iris.data
-y = iris.target
+# Mengunduh dataset
+st.title('Titanic Decision Tree')
+data = pd.read_csv('iris.csv')
 
-# Membagi dataset menjadi data latih dan data uji
+# Memilih kolom yang ingin di tampilkan
+columns = data.columns.tolist()
+columns.remove('survived')
+feature_selection = st.multiselect('Pilih Fitur', columns)
+
+# Memasukkan fitur dan target ke dalam variabel baru
+X = data[feature_selection]
+y = data['survived']
+
+# Membagi data menjadi train dan test
 X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
 
-# Membuat model Decision Tree
-model = DecisionTreeClassifier()
-
-# Melatih model dengan data latih
-model.fit(X_train, y_train)
-
-# Memprediksi kelas untuk data uji
-y_pred = model.predict(X_test)
+# Membangun model Decision Tree
+clf = DecisionTreeClassifier()
+clf.fit(X_train, y_train)
 
 # Menghitung akurasi model
+y_pred = clf.predict(X_test)
 accuracy = accuracy_score(y_test, y_pred)
 
-# Menampilkan hasil prediksi dan akurasi
-st.write("Hasil Prediksi:", y_pred)
-st.write("Akurasi:", accuracy)
+st.write('Akurasi Model: ', accuracy)
+
+# Menampilkan tree model
+st.pyplot(clf.plot_tree(clf))
