@@ -1,15 +1,27 @@
 import streamlit as st
-from graphviz import Digraph
+from sklearn import datasets
+from sklearn.tree import DecisionTreeClassifier
+from sklearn.model_selection import train_test_split
+from sklearn.metrics import accuracy_score
 
-def decision_tree_visualization():
-    st.write('Menggunakan Graphviz untuk visualisasi pohon keputusan.')
+# Memuat dataset iris
+iris = datasets.load_iris()
+X = iris.data
+y = iris.target
 
-    # Buat pohon keputusan di sini.
-    tree = Digraph('tree', node_attr={'shape': 'box'})
-    tree.edge('Parent', 'Child')
-    # Tambahkan pohon keputusan lainnya di sini...
+# Membagi dataset menjadi data latih dan data uji
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
 
-    # Render pohon keputusan menggunakan Graphviz
-    st.graphviz_chart(tree)
+# Membuat model decision tree
+model = DecisionTreeClassifier()
+model.fit(X_train, y_train)
 
-decision_tree_visualization()
+# Memprediksi kelas untuk data uji
+y_pred = model.predict(X_test)
+
+# Menghitung akurasi model
+accuracy = accuracy_score(y_test, y_pred)
+
+# Menampilkan hasil prediksi dan akurasi
+st.write("Hasil Prediksi:", y_pred)
+st.write("Akurasi:", accuracy)
